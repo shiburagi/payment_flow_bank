@@ -55,9 +55,9 @@ class _CardViewState extends State<CardView> with TickerProviderStateMixin {
       collapse();
 
     Brightness brightness =
-    ThemeData.estimateBrightnessForColor(widget.account.color);
+        ThemeData.estimateBrightnessForColor(widget.account.color);
     Color textColor =
-    brightness == Brightness.light ? Colors.black : Colors.white;
+        brightness == Brightness.light ? Colors.black : Colors.white;
 
     return GestureDetector(
       onTap: () {
@@ -114,37 +114,49 @@ class _CardViewState extends State<CardView> with TickerProviderStateMixin {
     ];
 
     if (widget.account.months != null) {
-      list.add(Row(
-        children: <Widget>[
-          Image(
-            image: Assets.image("date.png"),
+      list.add(
+        Container(
+          alignment: Alignment.topLeft,
+          height: 20,
+          child: Row(
+            children: <Widget>[
+              Image(
+                image: Assets.image("date.png"),
+              ),
+              Text(
+                " ${widget.account.months} months",
+                style: TextStyle(
+                  color: textColor,
+                  fontSize: 14,
+                ),
+              ),
+            ],
           ),
-          Text(
-            " ${widget.account.months} months",
-            style: TextStyle(
-              color: textColor,
-              fontSize: 14,
-            ),
-          ),
-        ],
-      ));
+        ),
+      );
     }
 
     if (widget.account.cardNumber != null) {
-      list.add(Row(
-        children: <Widget>[
-          Image(
-            image: Assets.image("mastercard.png"),
+      list.add(
+        Container(
+          alignment: Alignment.topLeft,
+          height: 20,
+          child: Row(
+            children: <Widget>[
+              Image(
+                image: Assets.image("mastercard.png"),
+              ),
+              Text(
+                " *${widget.account.getLastCardNumber()}",
+                style: TextStyle(
+                  color: textColor.withOpacity(0.5),
+                  fontSize: 14,
+                ),
+              ),
+            ],
           ),
-          Text(
-            " *${widget.account.getLastCardNumber()}",
-            style: TextStyle(
-              color: textColor.withOpacity(0.5),
-              fontSize: 14,
-            ),
-          ),
-        ],
-      ));
+        ),
+      );
     }
 
     if (widget.expand && widget.account.validThru != null) {
@@ -180,20 +192,20 @@ class StaggerAnimation extends StatelessWidget {
 
   StaggerAnimation({Key key, this.controller, this.child})
       : opacity = Tween<double>(
-    begin: 129.0,
-    end: 220.0,
-  ).animate(
-    CurvedAnimation(
-      parent: controller,
-      curve: Interval(
-        0.0,
-        1,
-        curve: Curves.ease,
-      ),
-    ),
-  ),
+          begin: 129.0,
+          end: 220.0,
+        ).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Interval(
+              0.0,
+              1,
+              curve: Curves.ease,
+            ),
+          ),
+        ),
 
-  // ... Other tween definitions ...
+        // ... Other tween definitions ...
 
         super(key: key);
 
