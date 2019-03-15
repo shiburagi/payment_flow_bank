@@ -24,6 +24,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   flutter_swiper: ^1.1.5
+  intl: ^0.15.7
 
 dev_dependencies:
   flutter_test:
@@ -63,7 +64,7 @@ flutter:
      fonts:
        - asset: fonts/Maven_Pro/MavenPro-Regular.ttf
        - asset: fonts/Maven_Pro/MavenPro-Medium.ttf
-         style: italic
+         weight: 400
        - asset: fonts/Maven_Pro/MavenPro-Bold.ttf
          weight: 700
   #

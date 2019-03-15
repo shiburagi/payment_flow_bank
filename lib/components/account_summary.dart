@@ -88,7 +88,7 @@ class _CardViewState extends State<CardView> with TickerProviderStateMixin {
                     child: Container(
                       color: widget.account.color,
                       child: Text(
-                        "\$${widget.account.amount.toStringAsFixed(2)}",
+                        widget.account.getAmountInString(),
                         style: TextStyle(color: textColor, fontSize: 20),
                       ),
                     ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class Account {
   String name;
@@ -14,6 +15,10 @@ class Account {
   String getLastCardNumber() {
     List l = cardNumber.split(" ");
     return l[l.length - 1];
+  }
+
+  String getAmountInString() {
+    return "\$${NumberFormat("#,###.00").format(amount).replaceAll(",", " ")}";
   }
 
   Map toJson() {
