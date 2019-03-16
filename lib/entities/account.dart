@@ -13,6 +13,7 @@ class Account {
   int months;
 
   String getLastCardNumber() {
+    if (cardNumber == null) return "";
     List l = cardNumber.split(" ");
     return l[l.length - 1];
   }
