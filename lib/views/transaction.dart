@@ -97,6 +97,7 @@ class _TransactionsViewState extends State<TransactionsView> {
 
   buildPayments(BuildContext context, BoxConstraints constraints) {
     return ListView(
+
       children: <Widget>[
         ListItem(
           image: "wifi.png",

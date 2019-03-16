@@ -47,58 +47,63 @@ class _AppPageState extends State<AppPage> {
           ),
         ],
       ),
-      body: Column(
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(top: 24),
-            height: 240,
-            child: AccountSummaryView(
-              onSelect: (account) => _selectedAccount = account,
-            ),
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height+200,
+          child: Column(
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(top: 24),
+                height: 240,
+                child: AccountSummaryView(
+                  onSelect: (account) => _selectedAccount = account,
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 30),
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: Text(
+                  "Favourites",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+                ),
+              ),
+              Theme(
+                data: Theme.of(context).copyWith(
+                  canvasColor: Colors.transparent,
+                  scaffoldBackgroundColor: Colors.transparent,
+                  backgroundColor: Colors.transparent,
+                  dialogBackgroundColor: Colors.transparent,
+                  colorScheme: Theme.of(context).colorScheme.copyWith(
+                      background: Colors.transparent,
+                      surface: Colors.transparent),
+                ),
+                child: Builder(
+                  builder: (context) => FavouriteListView(
+                        onSelect: (account) =>
+                            showFavouriteInfo(context, account),
+                      ),
+                ),
+              ),
+              Container(
+                height: 30,
+              ),
+              Expanded(
+                flex: 1,
+                child: TransactionsView(),
+              ),
+            ],
+            crossAxisAlignment: CrossAxisAlignment.start,
           ),
-          Container(
-            margin: EdgeInsets.only(top: 30),
-            padding: EdgeInsets.only(left: 20, right: 20),
-            child: Text(
-              "Favourites",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-            ),
-          ),
-          Theme(
-            data: Theme.of(context).copyWith(
-              canvasColor: Colors.transparent,
-              scaffoldBackgroundColor: Colors.transparent,
-              backgroundColor: Colors.transparent,
-              dialogBackgroundColor: Colors.transparent,
-              colorScheme: Theme.of(context).colorScheme.copyWith(
-                  background: Colors.transparent, surface: Colors.transparent),
-            ),
-            child: Builder(
-              builder: (context) => FavouriteListView(
-                    onSelect: (account) => showFavouriteInfo(context, account),
-                  ),
-            ),
-          ),
-          Container(
-            height: 30,
-          ),
-          Expanded(
-            flex: 1,
-            child: TransactionsView(),
-          ),
-        ],
-        crossAxisAlignment: CrossAxisAlignment.start,
+        ),
       ),
     );
   }
 
   void showFavouriteInfo(BuildContext context, Favourite favourite) {
-
-
     showModalBottomSheetApp(
       context: context,
-      builder: (context) => TransitionBottomSheetView(account: _selectedAccount, favourite: favourite),
+      builder: (context) => TransitionBottomSheetView(
+          account: _selectedAccount, favourite: favourite),
     );
   }
-
 }

@@ -86,57 +86,66 @@ class _TransitionBottomSheetViewState extends State<TransitionBottomSheetView>
           child: Container(),
           flex: 1,
         ),
-        StaggerAnimation(
-          controller: _controller,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                top: 32,
-                left: 20,
-                right: 20,
-                bottom: 24,
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
+        ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height -
+                MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: SingleChildScrollView(
+            child: StaggerAnimation(
+              controller: _controller,
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    top: 32,
+                    left: 20,
+                    right: 20,
+                    bottom: 24,
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(24))),
+                            child: _step == 0
+                                ? buildForm(context)
+                                : buildLoadingView(context),
+                          ),
+                          flex: 1,
+                        ),
+                        Container(
+                          height: 10,
+                        ),
+                        Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(24))),
+                            child: Row(children: createAction(context))),
+                      ],
+                    ),
+                  ),
+                  HideAnimation(
+                    controller: _controller,
+                    child: Container(
+                      alignment: Alignment.topCenter,
                       child: Card(
                         shape: RoundedRectangleBorder(
                             borderRadius:
-                                BorderRadius.all(Radius.circular(24))),
-                        child: _step == 0
-                            ? buildForm(context)
-                            : buildLoadingView(context),
+                                BorderRadius.all(Radius.circular(16))),
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        child: Image(
+                          image: Assets.image(widget.favourite.image),
+                          height: 64,
+                          width: 64,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                      flex: 1,
-                    ),
-                    Container(
-                      height: 10,
-                    ),
-                    Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(24))),
-                        child: Row(children: createAction(context))),
-                  ],
-                ),
-              ),
-              HideAnimation(
-                controller: _controller,
-                child: Container(
-                  alignment: Alignment.topCenter,
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(16))),
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    child: Image(
-                      image: Assets.image(widget.favourite.image),
-                      height: 64,
-                      width: 64,
-                      fit: BoxFit.cover,
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ],
