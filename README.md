@@ -1,6 +1,9 @@
 # payment_flow_bank
 
-A new Flutter application.
+A personal project to experiment with UI and Animation of Flutter by converting a design/prototype from Uplabs Website to code.
+
+Inspiration:
+https://www.uplabs.com/posts/payment-flow-066c958e-af5b-4bd3-8fbd-e2fdce44d7b4
 
 ---
 ## Preview
