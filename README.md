@@ -1,16 +1,26 @@
 # payment_flow_bank
 
 A new Flutter application.
+---
+## Preview
+---
 
-## Getting Started
+![Alt Text](https://github.com/shiburagi/payment_flow_bank/blob/master-v2/preview/gif/preview-1.gif?raw=true)
 
-This project is a starting point for a Flutter application.
+---
+## Screenshot
+---
 
-A few resources to get you started if this is your first Flutter project:
+<div>
+<img src="https://github.com/shiburagi/payment_flow_bank/blob/master-v2/preview/images/preview-1.png?raw=true" width="320px"/>
 
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
+<img src="https://github.com/shiburagi/payment_flow_bank/blob/master-v2/preview/images/preview-2.png?raw=true" width="320px"/>
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+<img src="https://github.com/shiburagi/payment_flow_bank/blob/master-v2/preview/images/preview-3.png?raw=true" width="320px"/>
+
+
+<img src="https://github.com/shiburagi/payment_flow_bank/blob/master-v2/preview/images/preview-4.png?raw=true" width="320px"/>
+
+
+
+</div>
