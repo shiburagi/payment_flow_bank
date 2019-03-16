@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 List favourites = [
   {
-    "name": "John",
+    "name": "Jessica",
     "image": "favourite1.jpg",
     "account": {
       "name": "Credit Card",
@@ -11,7 +11,7 @@ List favourites = [
     },
   },
   {
-    "name": "John",
+    "name": "James Smith",
     "image": "favourite2.jpg",
     "account": {
       "name": "Credit Card",
@@ -20,7 +20,7 @@ List favourites = [
     },
   },
   {
-    "name": "John",
+    "name": "Adam Fury",
     "image": "favourite3.jpg",
     "account": {
       "name": "Credit Card",
@@ -29,7 +29,7 @@ List favourites = [
     },
   },
   {
-    "name": "John",
+    "name": "Sara",
     "image": "favourite4.jpg",
     "account": {
       "name": "Credit Card",
@@ -38,7 +38,7 @@ List favourites = [
     },
   },
   {
-    "name": "John",
+    "name": "Alexander",
     "image": "favourite5.jpg",
     "account": {
       "name": "Credit Card",
@@ -47,7 +47,7 @@ List favourites = [
     },
   },
   {
-    "name": "John",
+    "name": "Mary Jane",
     "image": "favourite6.jpg",
     "account": {
       "name": "Credit Card",

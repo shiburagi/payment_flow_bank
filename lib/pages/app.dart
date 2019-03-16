@@ -38,12 +38,12 @@ class _AppPageState extends State<AppPage> {
             image: Assets.image("bell.png"),
           ),
           Container(
-            margin: EdgeInsets.only(right: 16, top: 8, bottom: 8),
+            margin: EdgeInsets.only(right: 16, top: 10, bottom: 10),
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                    image: Assets.image("user1.jpg"), fit: BoxFit.fitHeight)),
-            width: 42,
+                    image: Assets.image("user1.jpg"), fit: BoxFit.cover)),
+            width: 36,
           ),
         ],
       ),
