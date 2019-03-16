@@ -1,12 +1,14 @@
+import 'dart:ui';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:payment_flow_bank/components/account_summary.dart';
-import 'package:payment_flow_bank/dummy/accounts.dart';
-import 'package:payment_flow_bank/dummy/favourites.dart';
+import 'package:payment_flow_bank/components/bottom_sheet.dart';
 import 'package:payment_flow_bank/entities/account.dart';
 import 'package:payment_flow_bank/entities/favourite.dart';
 import 'package:payment_flow_bank/utils/assets.dart';
-import 'package:payment_flow_bank/utils/custom_clipper.dart';
-import 'package:payment_flow_bank/utils/custom_shadow_path.dart';
+import 'package:payment_flow_bank/views/account_summary.dart';
+import 'package:payment_flow_bank/views/favourite_list.dart';
+import 'package:payment_flow_bank/views/transaction.dart';
 
 class AppPage extends StatefulWidget {
   @override
@@ -16,10 +18,7 @@ class AppPage extends StatefulWidget {
 }
 
 class _AppPageState extends State<AppPage> {
-  int focusIndex = 0;
-
-  ScrollController accountScrollController = ScrollController();
-  ScrollController favouriteScrollController = ScrollController();
+  Account _selectedAccount;
 
   @override
   void initState() {
@@ -52,7 +51,9 @@ class _AppPageState extends State<AppPage> {
           Container(
             margin: EdgeInsets.only(top: 24),
             height: 240,
-            child: buildAccountSelection(context),
+            child: AccountSummaryView(
+              onSelect: (account) => _selectedAccount = account,
+            ),
           ),
           Container(
             margin: EdgeInsets.only(top: 30),
@@ -62,15 +63,27 @@ class _AppPageState extends State<AppPage> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
             ),
           ),
-          buildFavourites(context),
+          Theme(
+            data: Theme.of(context).copyWith(
+              canvasColor: Colors.transparent,
+              scaffoldBackgroundColor: Colors.transparent,
+              backgroundColor: Colors.transparent,
+              dialogBackgroundColor: Colors.transparent,
+              colorScheme: Theme.of(context).colorScheme.copyWith(
+                  background: Colors.transparent, surface: Colors.transparent),
+            ),
+            child: Builder(
+              builder: (context) => FavouriteListView(
+                    onSelect: (account) => showFavouriteInfo(context, account),
+                  ),
+            ),
+          ),
           Container(
             height: 30,
           ),
           Expanded(
             flex: 1,
-            child: LayoutBuilder(
-              builder: buildTabList,
-            ),
+            child: TransactionsView(),
           ),
         ],
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,235 +91,254 @@ class _AppPageState extends State<AppPage> {
     );
   }
 
-  Widget buildAccountSelection(BuildContext context) {
-    double width = 160;
-    return ListView.builder(
-      controller: accountScrollController,
-      itemBuilder: (context, index) {
-        if (index == accounts.length) {
-          return Container(
-            height: 10,
-            width: MediaQuery.of(context).size.width - width - 16,
-          );
-        }
-        CardView cardView = CardView(
-          expand: index == focusIndex,
-          account: Account().fromJson(accounts[index]),
-          width: width,
-          onClick: () {
-            accountScrollController.animateTo(index * (width + 16.0),
-                duration: Duration(milliseconds: 200), curve: Curves.linear);
-            setState(() {
-              focusIndex = index;
-            });
-          },
-        );
-
-        return Stack(
-          children: [
-            cardView,
-          ],
-        );
-      },
-      itemCount: accounts.length + 1,
-      scrollDirection: Axis.horizontal,
-    );
-  }
-
-  buildFavourites(BuildContext context) {
-    return Container(
-      height: 84,
-      child: ListView.builder(
-        controller: favouriteScrollController,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
-          if (index == 0)
-            return Container(
-              margin: EdgeInsets.only(left: 20, bottom: 4, top: 20),
-              child: Image(image: Assets.image("add.png")),
-            );
-          else if (index == favourites.length + 1)
-            return Container(
-              width: 20,
-            );
-
-          Favourite favourite = Favourite().fromJson(favourites[index - 1]);
-          return GestureDetector(
-            onTap: () {
-              favouriteScrollController.animateTo(index * 84.0,
-                  duration: Duration(milliseconds: 200), curve: Curves.linear);
-            },
-            child: Card(
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              margin: EdgeInsets.only(left: 20, bottom: 4, top: 20),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(16))),
-              child: Image(
-                image: Assets.image(favourite.image),
-                fit: BoxFit.cover,
-                width: 64,
-                height: 64,
+  void showFavouriteInfo(BuildContext context, Favourite favourite) {
+    UnderlineInputBorder border =
+        UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent));
+    Widget widget = Column(
+      children: [
+        Expanded(
+          child: Container(),
+          flex: 1,
+        ),
+        Container(
+          height: 619,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                top: 32,
+                left: 20,
+                right: 20,
+                bottom: 24,
+                child: Column(
+                  children: <Widget>[
+                    Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(24))),
+                      child: Container(
+                        padding: EdgeInsets.only(bottom: 20, top: 32),
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.only(
+                                right: 20,
+                                left: 20,
+                              ),
+                              child: Column(
+                                children: <Widget>[
+                                  Container(
+                                    alignment: Alignment.topCenter,
+                                    margin: EdgeInsets.only(top: 10),
+                                    child: Text(favourite.name,
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w400)),
+                                  ),
+                                  Opacity(
+                                    opacity: 0.5,
+                                    child: Container(
+                                      margin: EdgeInsets.only(top: 20),
+                                      child: Text("From",
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400)),
+                                    ),
+                                  ),
+                                  buildAccountSummary(
+                                      context, _selectedAccount, true)
+                                ],
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                              ),
+                            ),
+                            Divider(
+                              color: Color.fromRGBO(238, 241, 244, 1),
+                              height: 41,
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(
+                                right: 20,
+                                left: 20,
+                              ),
+                              child: Column(
+                                children: <Widget>[
+                                  Opacity(
+                                    opacity: 0.5,
+                                    child: Container(
+                                      child: Text("To",
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400)),
+                                    ),
+                                  ),
+                                  buildAccountSummary(
+                                      context, favourite.account, false),
+                                ],
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                              ),
+                            ),
+                            Divider(
+                              color: Color.fromRGBO(238, 241, 244, 1),
+                              height: 41,
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(
+                                right: 20,
+                                left: 20,
+                              ),
+                              child: Column(
+                                children: <Widget>[
+                                  Opacity(
+                                    opacity: 0.5,
+                                    child: Container(
+                                      child: Text("Message",
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400)),
+                                    ),
+                                  ),
+                                  TextFormField(
+                                    decoration: InputDecoration(
+                                      border: border,
+                                      enabledBorder: border,
+                                      focusedBorder: border,
+                                      hintText: "Hi!",
+                                    ),
+                                  ),
+                                ],
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                              ),
+                            ),
+                            Divider(
+                              color: Color.fromRGBO(238, 241, 244, 1),
+                              height: 41,
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(
+                                right: 20,
+                                left: 20,
+                              ),
+                              child: Column(
+                                children: <Widget>[
+                                  Opacity(
+                                    opacity: 0.5,
+                                    child: Container(
+                                      child: Text("Amount",
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400)),
+                                    ),
+                                  ),
+                                  Container(
+                                    child: TextFormField(
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 30),
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                        border: border,
+                                        enabledBorder: border,
+                                        focusedBorder: border,
+                                        hintStyle: TextStyle(fontSize: 30),
+                                        hintText: "0.00",
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                              ),
+                            ),
+                          ],
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 10,
+                    ),
+                    Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(24))),
+                      child: FlatButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          height: 59,
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Pay",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          width: MediaQuery.of(context).size.width,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
-        itemCount: favourites.length + 2,
-      ),
-    );
-  }
-
-  Widget buildTabList(BuildContext context, BoxConstraints constraints) {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Stack(
-            children: buildTabs(context, constraints),
+              Container(
+                alignment: Alignment.topCenter,
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(16))),
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  child: Image(
+                    image: Assets.image(favourite.image),
+                    height: 64,
+                    width: 64,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              )
+            ],
           ),
-          Container(
-            margin: EdgeInsets.only(),
-            width: constraints.maxWidth,
-            height: constraints.maxHeight - 56,
-            color: Colors.white,
-            child: buildPayments(context, constraints),
-          ),
-        ],
-      ),
-    );
-  }
-
-  int selectedTabIndex = 0;
-
-  Key key1 = GlobalKey();
-  Key key2 = GlobalKey();
-
-  List<Widget> buildTabs(BuildContext context, BoxConstraints constraints) {
-    Widget tab1 = buildTab(context, constraints, "Payments", 0);
-    Widget tab2 = buildTab(context, constraints, "Transactions", 1);
-
-    return //selectedTabIndex == 0 ? [tab1, tab2] :
-        [tab2, tab1];
-  }
-
-  Widget buildTab(
-      BuildContext context, BoxConstraints constraints, String text, int i) {
-    Widget widget = Container(
-      height: 56,
-      color: selectedTabIndex == i ? Colors.white : Colors.transparent,
-      alignment: Alignment.centerLeft,
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            selectedTabIndex = i;
-          });
-        },
-        child: Container(
-          alignment: Alignment.center,
-          width: constraints.maxWidth / 2,
-          margin: EdgeInsets.only(left: i * constraints.maxWidth / 2),
-          child: Text(
-            text,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ),
-      ),
-    );
-    if (selectedTabIndex == i)
-      return IgnorePointer(
-        child: ClipShadowPath(
-          clipper: TabShapeClipper(index: i),
-          shadow: Shadow(color: Colors.black12, blurRadius: 6),
-          child: widget,
-        ),
-      );
-    else
-      return Opacity(
-        child: widget,
-        opacity: 0.5,
-      );
-  }
-
-  buildPayments(BuildContext context, BoxConstraints constraints) {
-    return ListView(
-      children: <Widget>[
-        ListItem(
-          image: "wifi.png",
-          text: "Internet & Telephony",
-          subtitle: "Over 500 operators",
-        ),
-        ListItem(
-          image: "game.png",
-          text: "Games",
-          subtitle: "Over 250 games",
-        ),
-        ListItem(
-          image: "wallet.png",
-          text: "E-Wallet",
-          subtitle: "Over 60 wallets",
-        ),
-        ListItem(
-          image: "transport.png",
-          text: "Transport",
-          subtitle: "Over 150 operators",
         ),
       ],
     );
+
+    showModalBottomSheetApp(
+      context: context,
+      builder: (context) => widget,
+    );
   }
-}
 
-class ListItem extends StatelessWidget {
-  ListItem({this.image, this.text, this.subtitle, Key key}) : super(key: key);
-  final String text;
-  final String subtitle;
-  final String image;
-
-  @override
-  Widget build(BuildContext context) {
+  buildAccountSummary(
+      BuildContext context, Account account, bool displayAmount) {
     return Container(
-      margin: EdgeInsets.only(top: 16),
-      padding: EdgeInsets.only(left: 20, right: 20),
+      margin: EdgeInsets.only(top: 8),
       child: Row(
         children: <Widget>[
-          Image(
-            image: Assets.image(image),
+          Card(
+            color: account.color,
+            child: Container(
+              padding: EdgeInsets.all(7),
+              width: 34,
+              child: Image(
+                image: Assets.image("mastercard.png"),
+                height: 12,
+                width: 18,
+                fit: BoxFit.scaleDown,
+              ),
+              height: 26,
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 10),
+            child: Text(
+              "${account.name} *${account.getLastCardNumber()}",
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+            ),
           ),
           Expanded(
+            child: Container(),
             flex: 1,
-            child: Container(
-              margin: EdgeInsets.only(left: 10),
-              padding: EdgeInsets.only(bottom: 16),
-              decoration: BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(
-                  color: Color.fromRGBO(169, 184, 199, 0.2),
-                  width: 1,
-                )),
-              ),
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    text,
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  Opacity(
-                    opacity: 0.5,
-                    child: Text(
-                      subtitle,
-                      style: TextStyle(
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                ],
-                crossAxisAlignment: CrossAxisAlignment.start,
-              ),
+          ),
+          Container(
+            child: Text(
+              displayAmount ? "${account.getAmountInString()}" : "",
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
             ),
           ),
         ],
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
       ),
     );
   }

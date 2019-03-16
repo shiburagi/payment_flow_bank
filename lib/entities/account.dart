@@ -18,7 +18,7 @@ class Account {
   }
 
   String getAmountInString() {
-    return "\$${NumberFormat("#,###.00").format(amount).replaceAll(",", " ")}";
+    return "\$ ${NumberFormat("#,###.00").format(amount).replaceAll(",", " ")}";
   }
 
   Map toJson() {
