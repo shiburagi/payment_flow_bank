@@ -1,10 +1,10 @@
 import 'package:payment_flow_bank/entities/account.dart';
 
 class Favourite {
-  String name;
-  String image;
+  String? name;
+  String? image;
 
-  Account account;
+  Account? account;
 
   Map toJson() {
     return {

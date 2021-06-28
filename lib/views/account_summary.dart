@@ -5,14 +5,14 @@ import 'package:payment_flow_bank/dummy/accounts.dart';
 import 'package:payment_flow_bank/entities/account.dart';
 
 class AccountSummaryView extends StatefulWidget {
-  const AccountSummaryView({Key key,@required this.onSelect}) : super(key: key);
+  const AccountSummaryView({Key? key, required this.onSelect})
+      : super(key: key);
   final ValueChanged<Account> onSelect;
 
   @override
   State<StatefulWidget> createState() {
     return _AccountSummaryViewState();
   }
-
 }
 
 class _AccountSummaryViewState extends State<AccountSummaryView> {
@@ -24,7 +24,6 @@ class _AccountSummaryViewState extends State<AccountSummaryView> {
   void initState() {
     super.initState();
     widget.onSelect(Account().fromJson(accounts[_selectedAccountIndex]));
-
   }
 
   @override
@@ -69,5 +68,4 @@ class _AccountSummaryViewState extends State<AccountSummaryView> {
       scrollDirection: Axis.horizontal,
     );
   }
-
 }

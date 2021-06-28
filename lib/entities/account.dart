@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Account {
-  String name;
-  String cardNumber;
-  Color color;
+  String? name;
+  String? cardNumber;
+  Color? color;
 
-  String validThru;
+  String? validThru;
 
-  double amount;
+  double? amount;
 
-  int months;
+  int? months;
 
   String getLastCardNumber() {
     if (cardNumber == null) return "";
-    List l = cardNumber.split(" ");
+    List l = cardNumber!.split(" ");
     return l[l.length - 1];
   }
 

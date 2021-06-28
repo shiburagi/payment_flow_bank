@@ -19,7 +19,7 @@ class AppPage extends StatefulWidget {
 }
 
 class _AppPageState extends State<AppPage> {
-  Account _selectedAccount;
+  Account? _selectedAccount;
 
   @override
   void initState() {
@@ -49,7 +49,7 @@ class _AppPageState extends State<AppPage> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          height: MediaQuery.of(context).size.height+200,
+          height: MediaQuery.of(context).size.height + 200,
           child: Column(
             children: <Widget>[
               Container(
@@ -79,9 +79,8 @@ class _AppPageState extends State<AppPage> {
                 ),
                 child: Builder(
                   builder: (context) => FavouriteListView(
-                        onSelect: (account) =>
-                            showFavouriteInfo(context, account),
-                      ),
+                    onSelect: (account) => showFavouriteInfo(context, account),
+                  ),
                 ),
               ),
               Container(
@@ -100,10 +99,27 @@ class _AppPageState extends State<AppPage> {
   }
 
   void showFavouriteInfo(BuildContext context, Favourite favourite) {
-    showModalBottomSheetApp(
+    showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
-      builder: (context) => TransitionBottomSheetView(
-          account: _selectedAccount, favourite: favourite),
+      builder: (context) => KeyboardOverlap(
+        child: TransitionBottomSheetView(
+            account: _selectedAccount, favourite: favourite),
+      ),
+    );
+  }
+}
+
+class KeyboardOverlap extends StatelessWidget {
+  final Widget? child;
+
+  const KeyboardOverlap({Key? key, this.child}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      padding: MediaQuery.of(context).viewInsets,
+      duration: Duration(milliseconds: 100),
+      child: child,
     );
   }
 }
