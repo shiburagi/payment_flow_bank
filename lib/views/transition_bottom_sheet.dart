@@ -9,10 +9,10 @@ import 'package:payment_flow_bank/utils/assets.dart';
 
 class TransitionBottomSheetView extends StatefulWidget {
   const TransitionBottomSheetView(
-      {Key key, @required this.account, @required this.favourite})
+      {Key? key, required this.account, required this.favourite})
       : super(key: key);
 
-  final Account account;
+  final Account? account;
   final Favourite favourite;
 
   @override
@@ -25,7 +25,7 @@ class _TransitionBottomSheetViewState extends State<TransitionBottomSheetView>
     with TickerProviderStateMixin {
   int _step = 0;
 
-  Timer timer;
+  Timer? timer;
   double percent = 0.0;
 
   Color dividerColor = Color.fromRGBO(238, 241, 244, 1);
@@ -35,9 +35,9 @@ class _TransitionBottomSheetViewState extends State<TransitionBottomSheetView>
   UnderlineInputBorder _border =
       UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent));
 
-  AnimationController _controller;
-  AnimationController _animationController;
-  TextEditingController _amountController;
+  late AnimationController _controller;
+  late AnimationController _animationController;
+  TextEditingController? _amountController;
 
   @override
   void initState() {
@@ -54,12 +54,12 @@ class _TransitionBottomSheetViewState extends State<TransitionBottomSheetView>
   void dispose() {
     super.dispose();
     if (timer != null) {
-      timer.cancel();
+      timer!.cancel();
     }
 
     _controller.dispose();
     _animationController.dispose();
-    _amountController.dispose();
+    _amountController!.dispose();
   }
 
   Future<void> step2() async {
@@ -80,70 +80,68 @@ class _TransitionBottomSheetViewState extends State<TransitionBottomSheetView>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Wrap(
       children: [
-        Expanded(
-          child: Container(),
-          flex: 1,
-        ),
         StaggerAnimation(
           controller: _controller,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                top: 32,
-                left: 20,
-                right: 20,
-                bottom: 24,
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(24))),
-                        child: _step == 0
-                            ? buildForm(context)
-                            : buildLoadingView(context),
-                      ),
-                      flex: 1,
-                    ),
-                    Container(
-                      height: 10,
-                    ),
-                    Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(24))),
-                        child: Row(children: createAction(context))),
-                  ],
+          child: buildContent(context),
+        ),
+      ],
+    );
+  }
+
+  Widget buildContent(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned.fill(
+          top: 32,
+          left: 20,
+          right: 20,
+          bottom: 24,
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(24))),
+                  child: _step == 0
+                      ? buildForm(context)
+                      : buildLoadingView(context),
                 ),
+                flex: 1,
               ),
-              HideAnimation(
-                controller: _controller,
-                child: Container(
-                  alignment: Alignment.topCenter,
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(16))),
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    child: Image(
-                      image: Assets.image(widget.favourite.image),
-                      height: 64,
-                      width: 64,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
+              Container(
+                height: 10,
               ),
+              Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(24))),
+                  child: Row(children: createAction(context))),
             ],
+          ),
+        ),
+        HideAnimation(
+          controller: _controller,
+          child: Container(
+            alignment: Alignment.topCenter,
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(16))),
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              child: Image(
+                image: Assets.image(widget.favourite.image),
+                height: 64,
+                width: 64,
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
         ),
       ],
     );
   }
 
-  buildForm(BuildContext context) {
+  Widget buildForm(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(bottom: 20, top: 32),
       child: Column(
@@ -158,7 +156,7 @@ class _TransitionBottomSheetViewState extends State<TransitionBottomSheetView>
                 Container(
                   alignment: Alignment.topCenter,
                   margin: EdgeInsets.only(top: 10),
-                  child: Text(widget.favourite.name,
+                  child: Text(widget.favourite.name!,
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.w400)),
                 ),
@@ -173,7 +171,7 @@ class _TransitionBottomSheetViewState extends State<TransitionBottomSheetView>
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 8),
-                  child: buildAccountSummary(context, widget.account, true),
+                  child: buildAccountSummary(context, widget.account!, true),
                 ),
               ],
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,7 +199,7 @@ class _TransitionBottomSheetViewState extends State<TransitionBottomSheetView>
                 Container(
                   margin: EdgeInsets.only(top: 8),
                   child: buildAccountSummary(
-                      context, widget.favourite.account, false),
+                      context, widget.favourite.account!, false),
                 ),
               ],
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -290,8 +288,8 @@ class _TransitionBottomSheetViewState extends State<TransitionBottomSheetView>
     );
   }
 
-  buildLoadingView(BuildContext context) {
-    if (timer != null) timer.cancel();
+  Widget buildLoadingView(BuildContext context) {
+    if (timer != null) timer!.cancel();
     timer = Timer.periodic(Duration(milliseconds: 50), (timer) {
       setState(() {
         percent += 0.05;
@@ -384,7 +382,7 @@ class _TransitionBottomSheetViewState extends State<TransitionBottomSheetView>
                         children: <Widget>[
                           Container(
                             child: buildAccountSummary(
-                                context, widget.account, false),
+                                context, widget.account!, false),
                           ),
                           Container(
                             height: 44,
@@ -392,7 +390,7 @@ class _TransitionBottomSheetViewState extends State<TransitionBottomSheetView>
                           ),
                           Container(
                             child: buildAccountSummary(
-                                context, widget.favourite.account, false),
+                                context, widget.favourite.account!, false),
                           ),
                         ],
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -436,7 +434,7 @@ class _TransitionBottomSheetViewState extends State<TransitionBottomSheetView>
               Container(
                 margin: EdgeInsets.only(top: 4),
                 child: Text.rich(
-                  TextSpan(text: "\$${_amountController.text}", children: [
+                  TextSpan(text: "\$${_amountController!.text}", children: [
                     TextSpan(
                         text: ".00",
                         style: TextStyle(color: Colors.black.withOpacity(0.5)))
@@ -497,7 +495,7 @@ class _TransitionBottomSheetViewState extends State<TransitionBottomSheetView>
     );
   }
 
-  createDivider({Color color, double height}) {
+  createDivider({Color? color, required double height}) {
     double gap = (height - 1) / 2;
     return Container(
       color: color,
@@ -580,9 +578,9 @@ class _TransitionBottomSheetViewState extends State<TransitionBottomSheetView>
 }
 
 class StaggerAnimation extends StatelessWidget {
-  final Widget child;
+  final Widget? child;
 
-  StaggerAnimation({Key key, this.controller, this.child})
+  StaggerAnimation({Key? key, required this.controller, this.child})
       : padding = Tween<double>(
           begin: 0.0,
           end: 42.0,
@@ -632,12 +630,12 @@ class StaggerAnimation extends StatelessWidget {
   // This function is called each time the controller "ticks" a new frame.
   // When it runs, all of the animation's values will have been
   // updated to reflect the controller's current value.
-  Widget _buildAnimation(BuildContext context, Widget c) {
+  Widget _buildAnimation(BuildContext context, Widget? c) {
     return Transform.translate(
       offset: padding.value == 42.0 ? offset2.value : offset.value,
       child: Container(
         padding: EdgeInsets.only(top: padding.value),
-        height: 619,
+        height: 624,
         alignment: Alignment.bottomCenter,
         child: child,
       ),
@@ -654,9 +652,9 @@ class StaggerAnimation extends StatelessWidget {
 }
 
 class HideAnimation extends StatelessWidget {
-  final Widget child;
+  final Widget? child;
 
-  HideAnimation({Key key, this.controller, this.child})
+  HideAnimation({Key? key, required this.controller, this.child})
       : opacity = Tween<double>(
           begin: 1,
           end: 0,
@@ -681,7 +679,7 @@ class HideAnimation extends StatelessWidget {
   // This function is called each time the controller "ticks" a new frame.
   // When it runs, all of the animation's values will have been
   // updated to reflect the controller's current value.
-  Widget _buildAnimation(BuildContext context, Widget c) {
+  Widget _buildAnimation(BuildContext context, Widget? c) {
     return Opacity(
       opacity: opacity.value,
       child: child,

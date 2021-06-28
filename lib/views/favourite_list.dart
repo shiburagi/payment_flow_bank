@@ -7,7 +7,7 @@ import 'package:payment_flow_bank/entities/favourite.dart';
 import 'package:payment_flow_bank/utils/assets.dart';
 
 class FavouriteListView extends StatefulWidget {
-  const FavouriteListView({Key key, @required this.onSelect}) : super(key: key);
+  const FavouriteListView({Key? key, required this.onSelect}) : super(key: key);
 
   final ValueChanged<Favourite> onSelect;
 

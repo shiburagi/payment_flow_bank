@@ -4,7 +4,7 @@ import 'package:payment_flow_bank/utils/assets.dart';
 
 class CardView extends StatefulWidget {
   CardView({
-    Key key,
+    Key? key,
     this.expand = false,
     this.onClick,
     this.account,
@@ -12,16 +12,16 @@ class CardView extends StatefulWidget {
   }) : super(key: key);
 
   final bool expand;
-  final Function onClick;
-  final Account account;
-  final double width;
+  final Function? onClick;
+  final Account? account;
+  final double? width;
 
   @override
   _CardViewState createState() => _CardViewState();
 }
 
 class _CardViewState extends State<CardView> with TickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
 
   @override
   void initState() {
@@ -55,20 +55,20 @@ class _CardViewState extends State<CardView> with TickerProviderStateMixin {
       collapse();
 
     Brightness brightness =
-        ThemeData.estimateBrightnessForColor(widget.account.color);
+        ThemeData.estimateBrightnessForColor(widget.account!.color!);
     Color textColor =
         brightness == Brightness.light ? Colors.black : Colors.white;
 
-    return GestureDetector(
+    return InkWell(
       onTap: () {
-        widget.onClick();
+        widget.onClick!();
       },
       child: Container(
         margin: EdgeInsets.only(left: 16, right: 0),
         width: widget.width,
         child: Card(
           elevation: 6,
-          color: widget.account.color,
+          color: widget.account!.color,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20))),
           child: StaggerAnimation(
@@ -86,9 +86,9 @@ class _CardViewState extends State<CardView> with TickerProviderStateMixin {
                   Positioned(
                     bottom: 0,
                     child: Container(
-                      color: widget.account.color,
+                      color: widget.account!.color,
                       child: Text(
-                        widget.account.getAmountInString(),
+                        widget.account!.getAmountInString(),
                         style: TextStyle(color: textColor, fontSize: 20),
                       ),
                     ),
@@ -105,7 +105,7 @@ class _CardViewState extends State<CardView> with TickerProviderStateMixin {
   buildViews(BuildContext context, Color textColor) {
     List list = <Widget>[
       Text(
-        widget.account.name,
+        widget.account!.name!,
         style: TextStyle(color: textColor, fontSize: 18),
       ),
       Container(
@@ -113,7 +113,7 @@ class _CardViewState extends State<CardView> with TickerProviderStateMixin {
       ),
     ];
 
-    if (widget.account.months != null) {
+    if (widget.account!.months != null) {
       list.add(
         Container(
           alignment: Alignment.topLeft,
@@ -124,7 +124,7 @@ class _CardViewState extends State<CardView> with TickerProviderStateMixin {
                 image: Assets.image("date.png"),
               ),
               Text(
-                " ${widget.account.months} months",
+                " ${widget.account!.months} months",
                 style: TextStyle(
                   color: textColor,
                   fontSize: 14,
@@ -136,7 +136,7 @@ class _CardViewState extends State<CardView> with TickerProviderStateMixin {
       );
     }
 
-    if (widget.account.cardNumber != null) {
+    if (widget.account!.cardNumber != null) {
       list.add(
         Container(
           alignment: Alignment.topLeft,
@@ -147,7 +147,7 @@ class _CardViewState extends State<CardView> with TickerProviderStateMixin {
                 image: Assets.image("mastercard.png"),
               ),
               Text(
-                " *${widget.account.getLastCardNumber()}",
+                " *${widget.account!.getLastCardNumber()}",
                 style: TextStyle(
                   color: textColor.withOpacity(0.5),
                   fontSize: 14,
@@ -159,7 +159,7 @@ class _CardViewState extends State<CardView> with TickerProviderStateMixin {
       );
     }
 
-    if (widget.expand && widget.account.validThru != null) {
+    if (widget.expand && widget.account!.validThru != null) {
       list.add(Container(
         margin: EdgeInsets.only(top: 15),
         child: Column(
@@ -172,7 +172,7 @@ class _CardViewState extends State<CardView> with TickerProviderStateMixin {
               ),
             ),
             Text(
-              widget.account.validThru,
+              widget.account!.validThru!,
               style: TextStyle(
                 color: textColor,
                 fontSize: 14,
@@ -188,9 +188,9 @@ class _CardViewState extends State<CardView> with TickerProviderStateMixin {
 }
 
 class StaggerAnimation extends StatelessWidget {
-  final Widget child;
+  final Widget? child;
 
-  StaggerAnimation({Key key, this.controller, this.child})
+  StaggerAnimation({Key? key, required this.controller, this.child})
       : opacity = Tween<double>(
           begin: 129.0,
           end: 220.0,
@@ -215,7 +215,7 @@ class StaggerAnimation extends StatelessWidget {
   // This function is called each time the controller "ticks" a new frame.
   // When it runs, all of the animation's values will have been
   // updated to reflect the controller's current value.
-  Widget _buildAnimation(BuildContext context, Widget c) {
+  Widget _buildAnimation(BuildContext context, Widget? c) {
     return Container(
       height: opacity.value,
       alignment: Alignment.bottomCenter,

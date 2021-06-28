@@ -125,10 +125,10 @@ class _TransactionsViewState extends State<TransactionsView> {
 }
 
 class ListItem extends StatelessWidget {
-  ListItem({this.image, this.text, this.subtitle, Key key}) : super(key: key);
-  final String text;
-  final String subtitle;
-  final String image;
+  ListItem({this.image, this.text, this.subtitle, Key? key}) : super(key: key);
+  final String? text;
+  final String? subtitle;
+  final String? image;
 
   @override
   Widget build(BuildContext context) {
@@ -155,13 +155,13 @@ class ListItem extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   Text(
-                    text,
+                    text!,
                     style: TextStyle(fontSize: 18),
                   ),
                   Opacity(
                     opacity: 0.5,
                     child: Text(
-                      subtitle,
+                      subtitle!,
                       style: TextStyle(
                         fontSize: 14,
                       ),
